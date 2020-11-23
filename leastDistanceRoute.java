@@ -95,19 +95,6 @@ public class leastDistanceRoute{
 		// return number of miles as distance
 		return distanceMiles;
 	}
-	// function calculate the minimum distance
-	public int minDistance(int dist[], Boolean bool_set[]){
-		// Initialize min value
-       int min = Integer.MAX_VALUE, min_index = -1;
-
-       for (int v = 0; v < V; v++)
-           if (bool_set[v] == false && dst[v] <= min) {
-               min = dst[v];
-               min_index = v;
-           }
-
-      return min_index;
-	}
 	public List<String> Dijkstra(List<String> locationsList){
 		List<String>  routeDijkstra = new List(locationsList.getSize());
 	  	
