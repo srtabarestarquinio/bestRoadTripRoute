@@ -174,7 +174,7 @@ public class CalcRoute
     }
 
 
-    private List<Integer> path(int start, int end, ArrayList<Integer> previous)//function to pull the shortest path
+    private LinkedList<Integer> path(int start, int end, ArrayList<Integer> previous)//function to pull the shortest path
     {
         LinkedList<Integer> p = new LinkedList<Integer>();//linkedlist to store the path
 
@@ -246,7 +246,7 @@ public class CalcRoute
         boolean places = !attraction.isEmpty();//if there are no attraction in the list
         if(!places)//if no attractions
             attraction.add(start);//add the start
-        List<LinkedList<Integer>> lp = var(attraction);//call var on attractions
+        LinkedList<LinkedList<Integer>> lp = var(attraction);//call var on attractions
         int nump = attraction.size();//set the number of places to attractions size
 
 
@@ -300,7 +300,7 @@ public class CalcRoute
                 int p2i = attraction.indexOf(p2);//set p2 index to the index of p2
 
                 curr_dist += dist1.get(p1i).get(p2);//set current distance to current distance + the distance of p1i.get(p2)
-                List<Integer> path = path(p1,p2,prev1.get(p1i));
+                LinkedList<Integer> path = path(p1,p2,prev1.get(p1i));
 
             }
 
@@ -308,7 +308,7 @@ public class CalcRoute
             end2 = var.get(var.size()-1);//get the latest path
             curr_dist += dist1.get(startnum).get(end2);//update the distance
 
-            List<Integer> bestpath = path(end,end2,prev1.get(endnum));//intialize the best path
+            LinkedList<Integer> bestpath = path(end,end2,prev1.get(endnum));//intialize the best path
             Collections.reverse(bestpath);//reverse it to be in the right order
 
 
@@ -333,7 +333,7 @@ public class CalcRoute
             int p2 = varMin.get(i+1);//set p2 to varMin at i +1
             int p1i = attraction.indexOf(p1);//set p1i to the index of p1
             int p2i = attraction.indexOf(p2);//set p2i to the index of p2
-            List<Integer> routefinal = path(p1,p2,prev1.get(p1i));//set path final to path of p1,p1,prev1.get(p1i)
+            LinkedList<Integer> routefinal = path(p1,p2,prev1.get(p1i));//set path final to path of p1,p1,prev1.get(p1i)
 
             for(int j = 0; j < routefinal.size()-1; j++)//loop through the final path
                 finalRoute.addLast(vertex.get(routefinal.get(j)).city);//add the information to the path final
