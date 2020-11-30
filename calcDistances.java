@@ -8,91 +8,57 @@ import java.io.IOException;
 import java.io.*;
 
 public class calcDistances{
+	//function that returns a list of all the variations:
+    public static LinkedList<LinkedList<Integer>> var(LinkedList<Integer> l){
+        LinkedList<LinkedList<Integer>> list = new LinkedList<LinkedList<Integer>>();//make a linked list
 
-	public static final String oglocation1 = "San Francisco CA";
-	public static final String oglocation2 = "Grand Canyon AZ";
+        if(l.size() == 1){
+            // duplicate the array am to not affect it further
+            LinkedList<Integer> l1 = new LinkedList<Integer>();//duplicate the array
+            l1.addLast(l.get(0));//add the value at 0
+            list.addLast(l1);//add l1 to the list
+        }
+        else{
+            for(int i = 0; i < l.size(); i++){
+                LinkedList<Integer> l1 = new LinkedList<Integer>();//intiate l1
 
-	public static int distanceMiles = 0;
+                //add all values to l1:
+                for(int j = 0; j < l.size(); j++){
+                    if(j != i){
+                        l1.add(l.get(j));//add the information from l.get(j) to l1
+                    }
+                }
+                LinkedList<LinkedList<Integer>> list1 = var(l1);//recursivly call the function
+                //add the elements to the end of each variation:
+                for(int j = 0; j < list1.size(); j++){
+                    LinkedList<Integer> array = list1.get(j);//intialize the array
+                    array.add(0,l.get(i));//add the information from l.get(i) to the 0 position
+                    list.add(array);//add the array to the list
+                }
+            }
+        }
+        return list;
+    }
 
-	public int calcDistance(String location1, String location2){
-	  	// int distanceMiles = 0;
-	  	//use roads.csv to calculate distances between locations
-		String csvSplit = ",";
-		String line = "";
-		BufferedReader roadsFile = null;
-		List<String> locationsfrom1 = new List();
-		boolean flag = false;
+    //function to get the shortest path:
+    public LinkedList<Integer> shortestPath(int start, int end, ArrayList<Integer> previous){
+        LinkedList<Integer> p = new LinkedList<Integer>();//linkedlist to store the path
 
-
-  		try{
-			roadsFile = new BufferedReader(new FileReader("roads.csv"));
-			while ((line = roadsFile.readLine()) != null){
-				String[] road = line.split(csvSplit);
-				//road[0] = locations1, road[1] = locations2, road[2] = distance in miles
-				// Loop over roads.csv until find row that contains both locations and save the 3rd column to get the miles in between them
-				if((location1.equals(road[0]) && location2.equals(road[1])) || (location2.equals(road[0]) && location1.equals(road[1]))){
-					distanceMiles += Integer.valueOf(road[2]);
-					return distanceMiles;
-				}
-				else if(location1.equals(road[0])){
-					distanceMiles+= Integer.valueOf(road[2]) + calcDistance(road[1], oglocation2);
-				}
-				// else if(location1.equals(road[1])){
-				// 	distanceMiles+= Integer.valueOf(road[2]) + calcDistance(road[0], oglocation2);
-
-				// }
-				// else if(location1.equals(road[0]) || location1.equals(road[1])){
-					
-				// 	if(location1.equals(road[0])){
-				// 		locationsfrom1.add(road[1]);
-				// 		distanceMiles+= Integer.valueOf(road[2]) + calcDistance(road[1], oglocation2);
-				// 		// i = calcDistance(road[1], oglocation2);
-				// 	}
-				// 	else{
-				// 		locationsfrom1.add(road[0]);
-				// 		// distanceMiles+= Integer.valueOf(road[2]) + calcDistance(road[0], oglocation2);
-
-				// 		// calcDistance(road[1], road[0]);
-				// 		// while(flag==false){
-							
-				// 		// }
-				// 	}	
-				// }
-				else{
-					distanceMiles += 0;
-				}
+        int a = end;//a to the end
+        //if a equals the start or previous.get(a) = 0:
+        if(a == start || previous.get(a) >= 0){
+            while(a >= 0){
+                p.addFirst(a);//add a to the path
+                a = previous.get(a);//set a to previous.get(a)
+            }
+        }
+        return p;
+    }
+	
 
 
-			}
-		} catch(FileNotFoundException e){
-			System.out.println("File not found");
-		} catch(IOException e){
-			System.out.println("IOException");
-		} finally {
-			if (roadsFile != null){
-				try{
-					roadsFile.close();
-				} catch(IOException e){
-					System.out.println("IOException");
-				}
-			}
-		}
-		// for(int i=0; i<locationsfrom1.getSize(); i++){
-		// 	System.out.println(locationsfrom1.get(i));
-		// }
-		// return number of miles as distance
-		return distanceMiles;
-		// return distanceMiles;
-	}
 
-	public static void main(String[] args){
- 
-       calcDistances dist = new calcDistances();
-       String a = "San Francisco CA";
-       String b = "Grand Canyon AZ";
-       int dist_a_b = dist.calcDistance(a, b);
-       System.out.println(dist_a_b);
-   	}
+
 
 
 
