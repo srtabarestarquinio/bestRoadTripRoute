@@ -322,7 +322,7 @@ public class CalcRoute
         }
 
 
-        LinkedList<String> finalPath = new LinkedList<String>();//intialize final path
+        LinkedList<String> finalRoute = new LinkedList<String>();//intialize final path
         LinkedList<Integer> varMin = lp.get(min);//intialize the min variation
         varMin.addFirst(start);//add the start
         varMin.addLast(end);//add the end
@@ -333,15 +333,15 @@ public class CalcRoute
             int p2 = varMin.get(i+1);//set p2 to varMin at i +1
             int p1i = attraction.indexOf(p1);//set p1i to the index of p1
             int p2i = attraction.indexOf(p2);//set p2i to the index of p2
-            List<Integer> pathfinal = path(p1,p2,prev1.get(p1i));//set path final to path of p1,p1,prev1.get(p1i)
+            List<Integer> routefinal = path(p1,p2,prev1.get(p1i));//set path final to path of p1,p1,prev1.get(p1i)
 
-            for(int j = 0; j < pathfinal.size()-1; j++)//loop through the final path
-                finalPath.addLast(vertex.get(pathfinal.get(j)).city);//add the information to the path final
+            for(int j = 0; j < routefinal.size()-1; j++)//loop through the final path
+                finalRoute.addLast(vertex.get(routefinal.get(j)).city);//add the information to the path final
         }
-        finalPath.addLast(vertex.get(end).city);//add the ending city
+        finalRoute.addLast(vertex.get(end).city);//add the ending city
 
 
-        return finalPath;//return the final path
+        return finalRoute;//return the final path
     }
     
 }
