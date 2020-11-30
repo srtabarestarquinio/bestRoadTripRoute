@@ -11,12 +11,14 @@ public class leastDistanceRoute{
   
 	public static ArrayList<Integer> distance = new ArrayList();
 	//read files
-	public static List<String> route(String start, String end, List<String> attractions) throws IOException{
+	public static LinkedList<String> route(String start, String end, ArrayList<String> attractions) throws IOException{
 		//make object of CalcRoute class
 		CalcRoute calcRoute = new CalcRoute();
 
+		String csvSplit = ",";
+		String line = "";
 		//use bufferedreader to read the roads file:
-        BufferedReader roadsFile = new BufferedReader(new FileReader("roads.csv",line));
+        BufferedReader roadsFile = new BufferedReader(new FileReader("roads.csv"));
         //while loop line until null (reach end of file):
         while ((line = roadsFile.readLine()) != null)
         {
@@ -38,9 +40,11 @@ public class leastDistanceRoute{
         attractionsFile.close();
 
 
-        for(String place: attractions)//loop through the file
-            calcRoute.placeRoute(place);//add selected cities between the 2 main cities
-
+        // for(String place: attractions)//loop through the file
+        //     calcRoute.placeRoute(place);//add selected cities between the 2 main cities
+        for(int i=0; i<attractions.size(); i++){
+        	calcRoute.placeRoute(attractions.get(i));
+        }
 
         LinkedList<String> route = calcRoute.findRoute(start,end);//find the route
 
@@ -180,17 +184,29 @@ public class leastDistanceRoute{
   	String ending_city = input.nextLine();
 
   	ArrayList<String> attractions = new ArrayList<String>();//intialize the attractions list
-    while(true)//collect user input while true
-    {
-        System.out.println("\nPlease enter an attraction name (then enter done to finish): ");//enter the attractions until done
-        String attraction = sc.nextLine();
-        if(!attraction.equalsIgnoreCase("done"))//if user input is not done
-            attractions.add(attraction);//add the attraction to the list
-        else//if equals done
-            break;//break
-    }
+    
+    System.out.println("Number of attractions: ");
+	int numAttractions = Integer.valueOf(input.nextLine());
+  	// Lists<leastDistanceRoute> temp = new ArrayList<>();
+  	// ArrayList<String> attractions = new ArrayList<String>();
 
-    List<String> route = route(start,end,attractions);//find the route
+  	for (int i=0; i<numAttractions; i++){
+  		System.out.println("Attraction "+(i+1)+" :");
+  		String temp = input.nextLine();
+  		attractions.add(temp);
+  	}
+
+    // while(true)//collect user input while true
+    // {
+    //     System.out.println("\nPlease enter an attraction name (then enter done to finish): ");//enter the attractions until done
+    //     String attraction = input.nextLine();
+    //     if(!attraction.equalsIgnoreCase("done"))//if user input is not done
+    //         attractions.add(attraction);//add the attraction to the list
+    //     else//if equals done
+    //         break;//break
+    // }
+
+    LinkedList<String> route = route(starting_city,ending_city,attractions);//find the route
     int finalDist = 0;//intialize final distance
     for(int i=0; i<route.size(); i++){//loop through the route
         int d= distance.get(i);//get the distance
