@@ -213,7 +213,7 @@ public class leastDistanceRoute{
         finalDist += d;//add to the final distance
     }
     System.out.println("Final Route: " + route);//print the route
-    System.out.println("Final Distance: " + finalDist);//print the final distance
+    System.out.println("Final Distance: " + finalDist + " miles");//print the final distance
     System.out.println("You visited these attractions:");//print the attractions visited
     for(int j=0; j<attractions.size(); j++){//loop to print attractions
         System.out.println(attractions.get(j));
