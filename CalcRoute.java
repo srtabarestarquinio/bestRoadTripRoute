@@ -22,31 +22,30 @@ public class CalcRoute
     private class Vertex{
         public String city;//string to store the city name
         public ArrayList<String> attractions; // list of attractions to visit
-
-        public Vertex(String name)
-        {
-            city = name;//set city to the name
-            attractions = new ArrayList<String>();//make a new arrayList withe the attractions
+        //constructor:
+        public Vertex(String name){
+            city = name;
+            //make a new arrayList with the attractions:
+            attractions = new ArrayList<String>();
         }
     }
 
-    
-    //function to test if a vertex with the name exists:
-    public boolean checkVertex(String name){
-        return (index(name) >= 0);//the name of the vertex
-    }
-
     //function to find the index in the vertex list:
-    public int index(String name){
-        for(int vi = 0; vi < vertex.size(); vi++){
-            if(vertex.get(vi).city.equalsIgnoreCase(name)){
-                return vi;
+    public int getIndex(String name){
+        for(int v = 0; v < vertex.size(); v++){
+            if(vertex.get(v).city.equalsIgnoreCase(name)){
+                return v;
             }
         }
         //if cannot find index in vertex list, then user spelled place wrong or does not exist in file, therefore return -1:
         return -1;
     }
-    
+ 
+    //function to test if a vertex with the name exists:
+    public boolean checkVertex(String name){
+        return (getIndex(name) >= 0);//the name of the vertex
+    }
+
     //function to add edge
     public void addEdge(String vName1, String vName2, int dist){
         //if vertex1 is not edge:
@@ -55,7 +54,7 @@ public class CalcRoute
             vertex.add(v1);//add vertex
             edge.add(new ArrayList<Edge>());//add an ArrayList of edges
         }
-        int v1 = index(vName1);
+        int v1 = getIndex(vName1);
         ArrayList<Edge> edges1 = edge.get(v1);
 
         //if vertex2 is not edge:
@@ -64,7 +63,7 @@ public class CalcRoute
             vertex.add(v2);
             edge.add(new ArrayList<Edge>());//add the edge to an ArrayList
         }
-        int v2 = index(vName2);
+        int v2 = getIndex(vName2);
         ArrayList<Edge> edges2 = edge.get(v2);
 
 
@@ -89,7 +88,7 @@ public class CalcRoute
             return false;
         }
 
-        int vIndex = index(city);//set the vertex to the index of the city
+        int vIndex = getIndex(city);//set the vertex to the index of the city
         vertex.get(vIndex).attractions.add(place);//get the information and add it to the attractions list
 
         return true;
@@ -154,7 +153,7 @@ public class CalcRoute
     }
 
     //function to get the shortest path:
-    private LinkedList<Integer> path(int start, int end, ArrayList<Integer> previous){
+    private LinkedList<Integer> shortestPath(int start, int end, ArrayList<Integer> previous){
         LinkedList<Integer> p = new LinkedList<Integer>();//linkedlist to store the path
 
         int a = end;//a to the end
@@ -172,29 +171,23 @@ public class CalcRoute
     private static LinkedList<LinkedList<Integer>> var(LinkedList<Integer> l){
         LinkedList<LinkedList<Integer>> list = new LinkedList<LinkedList<Integer>>();//make a linked list
 
-        int s = l.size();//set int s to the l size
-
-
-        if(s == 1){
+        if(l.size() == 1){
             // duplicate the array am to not affect it further
             LinkedList<Integer> l1 = new LinkedList<Integer>();//duplicate the array
             l1.addLast(l.get(0));//add the value at 0
-
             list.addLast(l1);//add l1 to the list
         }
         else{
-            for(int i = 0; i < s; i++){
+            for(int i = 0; i < l.size(); i++){
                 LinkedList<Integer> l1 = new LinkedList<Integer>();//intiate l1
 
                 //add all values to l1:
-                for(int j = 0; j < s; j++){
+                for(int j = 0; j < l.size(); j++){
                     if(j != i){
                         l1.add(l.get(j));//add the information from l.get(j) to l1
                     }
                 }
-
                 LinkedList<LinkedList<Integer>> list1 = var(l1);//recursivly call the function
-                
                 //add the elements to the end of each variation:
                 for(int j = 0; j < list1.size(); j++){
                     LinkedList<Integer> array = list1.get(j);//intialize the array
@@ -207,11 +200,9 @@ public class CalcRoute
     }
 
     //function to find the shortest route from the given information:
-    public LinkedList<String> findRoute(String scity, String ecity){
-        int start = index(scity);//set the start to the index of the starting city
-        int end = index(ecity);//set the end to the index of the ending city
-
-
+    public LinkedList<String> findRoute(String starting_city, String ending_city){
+        int start = getIndex(starting_city);//set the start to the index of the starting city
+        int end = getIndex(ending_city);//set the end to the index of the ending city
 
         boolean places = !attraction.isEmpty();//if there are no attraction in the list
         if(!places)//if no attractions
@@ -219,99 +210,81 @@ public class CalcRoute
         LinkedList<LinkedList<Integer>> lp = var(attraction);//call var on attractions
         int nump = attraction.size();//set the number of places to attractions size
 
-
-        if(places)//if places
+        if(places){
             attraction.add(start);//add the start to the attractions list
             attraction.add(end);//add the end to the attractions list
+        }
 
-        int startnum = nump;//set start num to nump
-        int endnum = nump + 1;//set end num to nump +1
-        if(!places)//if no places
-        {
-            startnum = 0;//set start num to 0
-            endnum = 1;//set end num to 1
+        int startNum = nump;//set start num to nump
+        int endNum = nump + 1;//set end num to nump +1
+        if(!places){
+            startNum = 0;//set start num to 0
+            endNum = 1;//set end num to 1
         }
 
 
         ArrayList<ArrayList<Integer>> dist1 = new ArrayList<ArrayList<Integer>>();//intialze arraylist
         ArrayList<ArrayList<Integer>> prev1 = new ArrayList<ArrayList<Integer>>();//intialze arraylist
-        for(int pi = 0; pi < attraction.size(); pi++)//loop through the attractions
-        {
-            int a = attraction.get(pi);//set a to the attarction.get(pi)
-
+        //loop through the attractions
+        for(int i = 0; i < attraction.size(); i++){
             ArrayList<Integer> dist = new ArrayList<Integer>();//intialize arraylist
             ArrayList<Integer> prev = new ArrayList<Integer>();//intialize arraylist
-            Dijkstra(a,dist,prev);//call Dijkstra on a dist and prev
+            Dijkstra(attraction.get(i),dist,prev);//call Dijkstra on a dist and prev
             dist1.add(dist);//add dist to dist1
             prev1.add(prev);//add prev to prev1
         }
-
-
         int dist = -1;//set dist to -1
         int min = -1;//set min to -1
-        for(int n = 0; n < lp.size(); n++)// loop through lp
-        {
-            LinkedList<Integer> var = lp.get(n);//linked list to store the variations
+        // loop through lp:
+        for(int i = 0; i < lp.size(); i++){
+            LinkedList<Integer> var = lp.get(i);//linked list to store the variations
 
             int curr_dist = 0;//set current distance to 0
 
-
             int end2 = var.get(0);//set end2 to the variation.get(0) the first path
-            curr_dist += dist1.get(startnum).get(end2);//set curr_dist to dist1.get the startnum and the end2
+            curr_dist += dist1.get(startNum).get(end2);//set curr_dist to dist1.get the startNum and the end2
 
-            //List<Integer> pathS = path(start,end2,prev1.get(endnum));
-
-
-            for(int i = 0; i < var.size() - 1; i++)//loop through the variations (the next paths)
-            {
-                int p1 = var.get(i);//set p1 to var.get(i)
-                int p2 = var.get(i+1);//set p2 to the var +1
+            //loop through the variations (the next paths):
+            for(int j = 0; j < var.size() - 1; j++){
+                int p1 = var.get(j);//set p1 to var.get(i)
+                int p2 = var.get(j+1);//set p2 to the var +1
                 int p1i = attraction.indexOf(p1);//set p1 index to the index of p1
                 int p2i = attraction.indexOf(p2);//set p2 index to the index of p2
 
                 curr_dist += dist1.get(p1i).get(p2);//set current distance to current distance + the distance of p1i.get(p2)
-                LinkedList<Integer> path = path(p1,p2,prev1.get(p1i));
-
+                LinkedList<Integer> path = shortestPath(p1,p2,prev1.get(p1i));
             }
-
 
             end2 = var.get(var.size()-1);//get the latest path
-            curr_dist += dist1.get(startnum).get(end2);//update the distance
+            curr_dist += dist1.get(startNum).get(end2);//update the distance
 
-            LinkedList<Integer> bestpath = path(end,end2,prev1.get(endnum));//intialize the best path
+            LinkedList<Integer> bestpath = shortestPath(end,end2,prev1.get(endNum));//intialize the best path
             Collections.reverse(bestpath);//reverse it to be in the right order
-
-
-
-            if(n == 0 || dist > curr_dist)//if n is 0 or distance is > current distance
-            {
+            //if n is 0 or distance is > current distance:
+            if(i == 0 || dist > curr_dist){
                 dist = curr_dist;//set distance to current
-                min = n;//set min to end
+                min = i;//set min to end
             }
-
         }
-
 
         LinkedList<String> finalRoute = new LinkedList<String>();//intialize final path
         LinkedList<Integer> varMin = lp.get(min);//intialize the min variation
         varMin.addFirst(start);//add the start
         varMin.addLast(end);//add the end
 
-        for(int i = 0; i < varMin.size()-1; i++)//loop through varMin
-        {
+        //loop through varMin:
+        for(int i = 0; i < varMin.size()-1; i++){
             int p1 = varMin.get(i);//set p1 to varMin at i
             int p2 = varMin.get(i+1);//set p2 to varMin at i +1
             int p1i = attraction.indexOf(p1);//set p1i to the index of p1
             int p2i = attraction.indexOf(p2);//set p2i to the index of p2
-            LinkedList<Integer> routefinal = path(p1,p2,prev1.get(p1i));//set path final to path of p1,p1,prev1.get(p1i)
-
-            for(int j = 0; j < routefinal.size()-1; j++)//loop through the final path
+            LinkedList<Integer> routefinal = shortestPath(p1,p2,prev1.get(p1i));//set path final to path of p1,p1,prev1.get(p1i)
+            //loop through the final path
+            for(int j = 0; j < routefinal.size()-1; j++)
                 finalRoute.addLast(vertex.get(routefinal.get(j)).city);//add the information to the path final
         }
         finalRoute.addLast(vertex.get(end).city);//add the ending city
 
-
-        return finalRoute;//return the final path
-    }
-    
+        return finalRoute;
+    }  
 }
