@@ -1,19 +1,25 @@
 //Rose Tabares - CS245 - Assignment02 - Best Road Trip Route - CalcRoute.java class
-
 import java.util.*;
 
 public class CalcRoute
 {
+    private ArrayList<Vertex> vertex;//ArrayList of vertices
+    private ArrayList<ArrayList<Edge>> edge;//ArrayList of edges
+    private LinkedList<Integer> attraction;//list of vertices to visit on the way
 
-    private class Edge
-    {
+    //constructor for CalcRoute class:
+    public CalcRoute(){
+        vertex = new ArrayList<Vertex>();//create arraylist for vertex
+        edge = new ArrayList<ArrayList<Edge>>();//create arraylist for edge
+        attraction = new LinkedList<Integer>();//create arraylist for attraction
+    }
+
+    //helper classes to create graph:
+    private class Edge{
         public int v1,v2; // index of the vertices
         int distance; // distance in miles
     }
-
-
-    private class Vertex
-    {
+    private class Vertex{
         public String city;//string to store the city name
         public ArrayList<String> attractions; // list of attractions to visit
 
@@ -24,41 +30,27 @@ public class CalcRoute
         }
     }
 
-    private ArrayList<Vertex> vertex;//ArrayList of vertices
-    private ArrayList<ArrayList<Edge>> edge;//ArrayList of edges
-
-    private LinkedList<Integer> attraction;//list of vertices to visit on the way
-
-    public boolean checkVertex(String name)//function to test if a vertex with the name exists
-    {
+    
+    //function to test if a vertex with the name exists:
+    public boolean checkVertex(String name){
         return (index(name) >= 0);//the name of the vertex
     }
 
-
-    public int index(String name)//function to find the index in the vertex list
-    {
-        for(int vi = 0; vi < vertex.size(); vi++)
-        {
-            if(vertex.get(vi).city.equalsIgnoreCase(name))
+    //function to find the index in the vertex list:
+    public int index(String name){
+        for(int vi = 0; vi < vertex.size(); vi++){
+            if(vertex.get(vi).city.equalsIgnoreCase(name)){
                 return vi;
+            }
         }
-
+        //if cannot find index in vertex list, then user spelled place wrong or does not exist in file, therefore return -1:
         return -1;
     }
-
-    public CalcRoute() //constructor for the CalcRoute
-    {
-        vertex = new ArrayList<Vertex>();//create arraylist for vertex
-        edge = new ArrayList<ArrayList<Edge>>();//create arraylist for edge
-        attraction = new LinkedList<Integer>();//create arraylist for attraction
-    }
-
-
-    public void addEdge(String vName1, String vName2, int dist)//function to add edge
-    {
-        if(!checkVertex(vName1))//if not edge
-        {
-
+    
+    //function to add edge
+    public void addEdge(String vName1, String vName2, int dist){
+        //if vertex1 is not edge:
+        if(!checkVertex(vName1)){
             Vertex v1 = new Vertex(vName1);//add vertex
             vertex.add(v1);//add vertex
             edge.add(new ArrayList<Edge>());//add an ArrayList of edges
@@ -66,9 +58,8 @@ public class CalcRoute
         int v1 = index(vName1);
         ArrayList<Edge> edges1 = edge.get(v1);
 
-
-        if(!checkVertex(vName2))//if not edge
-        {
+        //if vertex2 is not edge:
+        if(!checkVertex(vName2)){
             Vertex v2 = new Vertex(vName2);//add vertex
             vertex.add(v2);
             edge.add(new ArrayList<Edge>());//add the edge to an ArrayList
@@ -91,61 +82,53 @@ public class CalcRoute
         edges2.add(e2);//add the new edge to the list of edges
     }
 
-
-    public boolean addPlace(String city, String place)//function to add the list of attractions of the city
-    {
-        if(!checkVertex(city))//if it isn't a vertex
-            return false;//return false
+    //function to add the list of attractions of the city
+    public boolean addPlace(String city, String place){
+        //if it isn't a vertex:
+        if(!checkVertex(city)){
+            return false;
+        }
 
         int vIndex = index(city);//set the vertex to the index of the city
         vertex.get(vIndex).attractions.add(place);//get the information and add it to the attractions list
 
-        return true;//return true
+        return true;
     }
 
-
-    public boolean placeRoute(String place)//function to add the name and index of the city with the attractions to add them to the list
-    {
-        for(int i = 0; i < vertex.size(); i++)//loop thorough form zero to the vertex size
-        {
+    //function to add the name and index of the city with the attractions to add them to the list:
+    public boolean placeRoute(String place){
+        for(int i = 0; i < vertex.size(); i++){
             Vertex v = vertex.get(i);//get the information
-            if(v.attractions.contains(place))//if the attraction is in that place
-            {
+            //if the attraction is in that place
+            if(v.attractions.contains(place)){
                 attraction.add(i);//add it to the attractions list
-                return true;//return true
+                return true;
             }
         }
-
-        return false;//if not found return false
+        return false;
     }
 
-
-    public void Dijkstra(int start, ArrayList<Integer> distance, ArrayList<Integer> previous)//function to perform Dijkstra's and find the shortest path
-    {
-        
-
+    //Dijkstra algorithm to find least cost route (minimun distance route):
+    public void Dijkstra(int start, ArrayList<Integer> distance, ArrayList<Integer> previous){
         ArrayList<Integer> list = new ArrayList<Integer>();//intiate an ArrayList to store the information
 
         int ai,bi;//intialize variables
         int alternate,minDistance,curDistance;//intialize variables
         int a,b;//intialize variables
-        for(b = 0; b < vertex.size(); b++)//loop through the vertex arraylist
-        {
+        for(b = 0; b < vertex.size(); b++){
             distance.add(-1);//add -1 to the distance arraylist
             previous.add(-1);//aff -1 to the previous arraylist
             list.add(b);//add b to the arraylist
         }
         distance.set(start,0);//set the distance to the value of start and 0
 
-        while(!list.isEmpty())//while the list is not empty
-        {
+        while(!list.isEmpty()){
             ai = minDistance = -1;//set ai to the min distance -1
-            for(bi = 0; bi < list.size(); bi++)//loop through the list
-            {
+            for(bi = 0; bi < list.size(); bi++){
                 b = list.get(bi);//get bi from the list and set it to b
                 curDistance = distance.get(b);//set curdistance to the distance that you get from b
-                if(curDistance >= 0 && (ai < 0 || curDistance < minDistance))//if the current disnace is <0 and ai < 0 or the current< min distance
-                {
+                //if the current disnace is <0 and ai < 0 or the current< min distance:
+                if(curDistance >= 0 && (ai < 0 || curDistance < minDistance)){
                     ai = bi;//set ai to equal bi
                     minDistance = curDistance;//and min distance euqal to current distance
                 }
@@ -154,17 +137,14 @@ public class CalcRoute
             a = list.get(ai);//set a to list.get ai
             list.remove(ai);//remove ai fromt he list
 
-
-            for(bi = 0; bi < edge.get(a).size(); bi++)//loop through the size of edge.get(a)
-            {
+            //loop through the size of edge.get(a):
+            for(bi = 0; bi < edge.get(a).size(); bi++){
                 b = edge.get(a).get(bi).v2;//set b to edge.get(a)
 
-                if(list.contains(b))//if the list contains b
-                {
+                if(list.contains(b)){
                     alternate = distance.get(a) + edge.get(a).get(bi).distance;//set alternate to distance at a + the distance at bi
-
-                    if(distance.get(b) < 0 || alternate < distance.get(b))//if the distance at b is <0 or the alternate is < the distance of b
-                    {
+                    //if the distance at b is <0 or the alternate is < the distance of b:
+                    if(distance.get(b) < 0 || alternate < distance.get(b)){
                         distance.set(b,alternate);//set the distance to b and alternate
                         previous.set(b,a);//set previous to a and b
                     }
@@ -173,71 +153,61 @@ public class CalcRoute
         }
     }
 
-
-    private LinkedList<Integer> path(int start, int end, ArrayList<Integer> previous)//function to pull the shortest path
-    {
+    //function to get the shortest path:
+    private LinkedList<Integer> path(int start, int end, ArrayList<Integer> previous){
         LinkedList<Integer> p = new LinkedList<Integer>();//linkedlist to store the path
 
         int a = end;//a to the end
-        if(a == start || previous.get(a) >= 0)//if a equals the start or previous.get(a) = 0
-        {
-            while(a >= 0)//while a > 0
-            {
+        //if a equals the start or previous.get(a) = 0:
+        if(a == start || previous.get(a) >= 0){
+            while(a >= 0){
                 p.addFirst(a);//add a to the path
                 a = previous.get(a);//set a to previous.get(a)
             }
         }
-
-        return p;//return the path
+        return p;
     }
 
-
-    private static LinkedList<LinkedList<Integer>> var(LinkedList<Integer> l)//function that returns a list of all the variations
-    {
+    //function that returns a list of all the variations:
+    private static LinkedList<LinkedList<Integer>> var(LinkedList<Integer> l){
         LinkedList<LinkedList<Integer>> list = new LinkedList<LinkedList<Integer>>();//make a linked list
 
         int s = l.size();//set int s to the l size
 
 
-        if(s == 1)//if s is 1
-        {
+        if(s == 1){
             // duplicate the array am to not affect it further
             LinkedList<Integer> l1 = new LinkedList<Integer>();//duplicate the array
             l1.addLast(l.get(0));//add the value at 0
 
             list.addLast(l1);//add l1 to the list
         }
-        else
-        {
-            for(int i = 0; i < s; i++)//loop through from 0 to the value of s
-            {
+        else{
+            for(int i = 0; i < s; i++){
                 LinkedList<Integer> l1 = new LinkedList<Integer>();//intiate l1
 
-                for(int j = 0; j < s; j++)//add all values to li
-                {
-                    if(j != i)//if j is not equal to i
+                //add all values to l1:
+                for(int j = 0; j < s; j++){
+                    if(j != i){
                         l1.add(l.get(j));//add the information from l.get(j) to l1
+                    }
                 }
 
-
                 LinkedList<LinkedList<Integer>> list1 = var(l1);//recursivly call the function
-
-
-                for(int j = 0; j < list1.size(); j++)//add the elements to the end of each variation
-                {
+                
+                //add the elements to the end of each variation:
+                for(int j = 0; j < list1.size(); j++){
                     LinkedList<Integer> array = list1.get(j);//intialize the array
                     array.add(0,l.get(i));//add the information from l.get(i) to the 0 position
                     list.add(array);//add the array to the list
                 }
             }
         }
-
-        return list;//return the list
+        return list;
     }
 
-
-    public LinkedList<String> findRoute(String scity, String ecity)//function to find the shortest route from the given information
-    {
+    //function to find the shortest route from the given information:
+    public LinkedList<String> findRoute(String scity, String ecity){
         int start = index(scity);//set the start to the index of the starting city
         int end = index(ecity);//set the end to the index of the ending city
 
