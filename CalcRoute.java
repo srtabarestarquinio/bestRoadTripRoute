@@ -46,7 +46,7 @@ public class CalcRoute
         return -1;
     }
 
-    CalcRoute() //constructor for the CalcRoute
+    public CalcRoute() //constructor for the CalcRoute
     {
         vertex = new ArrayList<Vertex>();//create arraylist for vertex
         edge = new ArrayList<ArrayList<Edge>>();//create arraylist for edge
