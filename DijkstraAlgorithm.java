@@ -6,11 +6,14 @@ public class DijkstraAlgorithm{
   //Dijkstra algorithm to find least cost route (minimun distance route):
   private ArrayList<Vertex> vertex;//ArrayList of vertices
   private ArrayList<ArrayList<Edge>> edge;//ArrayList of edges
+  private LinkedList<Integer> attraction;//list of vertices to visit on the way
 
   //constructor for DijkstraAlgorithm class:
   public DijkstraAlgorithm(){
       vertex = new ArrayList<Vertex>();//create arraylist for vertex
       edge = new ArrayList<ArrayList<Edge>>();//create arraylist for edge
+      attraction = new LinkedList<Integer>();//create arraylist for attraction
+
   }
   //helper classes to create graph:
   private class Edge{
@@ -29,6 +32,15 @@ public class DijkstraAlgorithm{
   }
   public ArrayList<Vertex> getVertex(){
     return vertex;
+  }
+  public ArrayList<ArrayList<Edge>> getEdge(){
+    return edge;
+  }
+  public LinkedList<Integer> getAttraction(){
+    return attraction;
+  }
+  public String vertexGet(int num){
+    return vertex.get(num).city;
   }
   public int getIndex(String name){
       for(int v = 0; v < vertex.size(); v++){
@@ -150,7 +162,4 @@ public class DijkstraAlgorithm{
         }
     }
   }
-
-
-  
 }
