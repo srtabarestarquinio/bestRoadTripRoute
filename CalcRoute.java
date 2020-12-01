@@ -3,16 +3,27 @@ import java.util.*;
 
 public class CalcRoute
 {
+    // private class Vertex{
+    //   public String city;//string to store the city name
+    //   public ArrayList<String> attractions; // list of attractions to visit
+    //   //constructor:
+    //   public Vertex(String name){
+    //       city = name;
+    //       //make a new arrayList with the attractions:
+    //       attractions = new ArrayList<String>();
+    //   }
+    // }
+  
     // private ArrayList<Vertex> vertex;//ArrayList of vertices
     // private ArrayList<ArrayList<Edge>> edge;//ArrayList of edges
-    private LinkedList<Integer> attraction;//list of vertices to visit on the way
+    // private LinkedList<Integer> attraction;//list of vertices to visit on the way
 
     //constructor for CalcRoute class:
-    public CalcRoute(){
-        // vertex = new ArrayList<Vertex>();//create arraylist for vertex
-        // edge = new ArrayList<ArrayList<Edge>>();//create arraylist for edge
-        attraction = new LinkedList<Integer>();//create arraylist for attraction
-    }
+    // public CalcRoute(){
+    //     // vertex = new ArrayList<Vertex>();//create arraylist for vertex
+    //     // edge = new ArrayList<ArrayList<Edge>>();//create arraylist for edge
+    //     // attraction = new LinkedList<Integer>();//create arraylist for attraction
+    // }
 
     // //helper classes to create graph:
     // private class Edge{
@@ -156,9 +167,10 @@ public class CalcRoute
     public LinkedList<String> findRoute(String starting_city, String ending_city){
         DijkstraAlgorithm dijAlg = new DijkstraAlgorithm();
 
-        int start = getIndex(starting_city);//set the start to the index of the starting city
-        int end = getIndex(ending_city);//set the end to the index of the ending city
+        int start = dijAlg.getIndex(starting_city);//set the start to the index of the starting city
+        int end = dijAlg.getIndex(ending_city);//set the end to the index of the ending city
 
+        LinkedList<Integer> attraction = dijAlg.getAttraction();
         boolean places = !attraction.isEmpty();//if there are no attraction in the list
         if(!places)//if no attractions
             attraction.add(start);//add the start
@@ -187,7 +199,7 @@ public class CalcRoute
         for(int i = 0; i < attraction.size(); i++){
             ArrayList<Integer> dist = new ArrayList<Integer>();//intialize arraylist
             ArrayList<Integer> prev = new ArrayList<Integer>();//intialize arraylist
-            Dijkstra(attraction.get(i),dist,prev);//call Dijkstra on a dist and prev
+            dijAlg.Dijkstra(attraction.get(i),dist,prev);//call Dijkstra on a dist and prev
             dist1.add(dist);//add dist to dist1
             prev1.add(prev);//add prev to prev1
         }
@@ -238,10 +250,13 @@ public class CalcRoute
             int p2i = attraction.indexOf(p2);//set p2i to the index of p2
             LinkedList<Integer> routefinal = calcDist.shortestPath(p1,p2,prev1.get(p1i));//set path final to path of p1,p1,prev1.get(p1i)
             //loop through the final path
-            for(int j = 0; j < routefinal.size()-1; j++)
-                finalRoute.addLast(vertex.get(routefinal.get(j)).city);//add the information to the path final
+            for(int j = 0; j < routefinal.size()-1; j++){
+                String comp = dijAlg.vertexGet(routefinal.get(j));
+                finalRoute.addLast(comp);//add the information to the path final
+            }
         }
-        finalRoute.addLast(vertex.get(end).city);//add the ending city
+        String comp = dijAlg.vertexGet(end);
+        finalRoute.addLast(comp);//add the ending city
 
         return finalRoute;
     }  
