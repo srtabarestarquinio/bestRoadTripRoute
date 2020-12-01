@@ -10,10 +10,11 @@ import java.io.*;
 public class leastDistanceRoute{
   
 	public static ArrayList<Integer> distance = new ArrayList();
-	DijkstraAlgorithm dijAlg = new DijkstraAlgorithm();
-	//function to find the shortest route from the given information:
+	//create object from DijkstraAlgorithm class
+    DijkstraAlgorithm dijAlg = new DijkstraAlgorithm();
+	
+    //function to find the shortest route from the given information:
     public LinkedList<String> findRoute(String starting_city, String ending_city){
-        
 
         int start = dijAlg.getIndex(starting_city);//set the start to the index of the starting city
         int end = dijAlg.getIndex(ending_city);//set the end to the index of the ending city
@@ -23,6 +24,7 @@ public class leastDistanceRoute{
         if(!places)//if no attractions
             attraction.add(start);//add the start
 
+        //create object from calcDistances class
         calcDistances calcDist = new calcDistances();
 
         LinkedList<LinkedList<Integer>> lp = calcDist.var(attraction);//call var on attractions
@@ -172,10 +174,8 @@ public class leastDistanceRoute{
 	    int finalDist = 0;
 	    //for loop through the route:
 	    for(int i=0; i<route.size(); i++){
-	        //use get function for distance:
-	        int d= distance.get(i);
-	        //accumulate to final distance calculation:
-	        finalDist += d;
+	        //use get function for distance then accumulate to final distance calculation:
+	        finalDist += distance.get(i);
 	    }
 	    System.out.println("\nBest Route to travel Least Distance: \n" + route);
 	    System.out.println("\nVisiting the following attractions:");
